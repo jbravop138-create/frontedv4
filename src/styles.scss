@@ -1,0 +1,352 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+
+  --bg: #070a0f;        
+  --bg2: #0b0f17;         
+  --card: #0f1624;        
+  --card2: #121b2c;
+
+  --text: #e7ecf7;
+  --muted: #9aa6bd;
+  --muted2: #73809a;
+
+  --line: rgba(255,255,255,.08);
+  --line2: rgba(255,255,255,.05);
+
+  --in: #3cc896;         
+  --out: #ff5a5a;        
+  --adj: #b478ff;       
+  --warn: #ffd36a;    
+  --info: #5aa9ff; 
+
+  --shadow: 0 10px 30px rgba(0,0,0,.45);
+  --glow-in: 0 0 0 1px rgba(60,200,150,.25), 0 0 24px rgba(60,200,150,.14);
+  --glow-out: 0 0 0 1px rgba(255,90,90,.25), 0 0 24px rgba(255,90,90,.14);
+  --glow-adj: 0 0 0 1px rgba(180,120,255,.25), 0 0 24px rgba(180,120,255,.14);
+
+  --r-lg: 18px;
+  --r-md: 14px;
+  --r-sm: 10px;
+
+  --font: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+  --display: 'Space Grotesk', 'Manrope', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --max: 1200px;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--text);
+  background: radial-gradient(1200px 800px at 20% 10%, rgba(90,169,255,.10), transparent 60%),
+              radial-gradient(900px 700px at 80% 30%, rgba(180,120,255,.10), transparent 65%),
+              radial-gradient(1000px 900px at 40% 90%, rgba(60,200,150,.07), transparent 60%),
+              linear-gradient(180deg, var(--bg), var(--bg2));
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .55;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,.06) 1px, transparent 0),
+    linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size: 28px 28px, 140px 140px, 140px 140px;
+  mix-blend-mode: overlay;
+}
+
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font-family: inherit; }
+img { max-width: 100%; display: block; }
+
+h1,h2,h3,h4 { margin: 0; letter-spacing: .04em; }
+h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  background: linear-gradient(90deg, #ecf4ff, #9fe0ff 40%, #ffd8a6 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+h2 {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #e9f1ff;
+}
+h3, h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: #eef3ff;
+}
+p { margin: 0; color: var(--muted); line-height: 1.55; }
+.muted { color: var(--muted); }
+.muted2 { color: var(--muted2); }
+.mono { font-family: var(--mono); letter-spacing: .02em; }
+.strong { font-weight: 600; }
+
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 22px 18px;
+}
+
+.card, .panel {
+  background: linear-gradient(180deg, rgba(255,255,255,.03), transparent 60%),
+              radial-gradient(900px 400px at 30% 0%, rgba(90,169,255,.06), transparent 65%),
+              var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+}
+
+.summary-card, .kpi {
+  background: rgba(12, 16, 28, 0.65);
+  border: 1px solid rgba(120, 160, 255, 0.18);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.35);
+}
+
+label,
+.label,
+.title,
+.page-title,
+.eyebrow,
+.hint {
+  font-weight: 600;
+  letter-spacing: .08em;
+}
+
+.label,
+.page-title,
+.eyebrow {
+  text-transform: uppercase;
+}
+
+.hint {
+  font-size: 12px;
+  color: rgba(200, 215, 255, 0.7);
+}
+
+.strong {
+  font-weight: 700;
+}
+
+.input, input[type="text"], input[type="number"], input[type="date"], select, textarea {
+  width: 100%;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(140% 140% at 10% 0%, rgba(120, 200, 255, 0.12), transparent 60%),
+    rgba(10, 14, 22, .75);
+  color: var(--text);
+  padding: 12px 12px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+input::placeholder, textarea::placeholder { color: rgba(154,166,189,.65); }
+
+input:focus, select:focus, textarea:focus {
+  border-color: rgba(90,169,255,.55);
+  box-shadow: 0 0 0 3px rgba(90,169,255,.14);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+  transition: transform .08s ease, background .15s ease, border-color .15s ease;
+}
+.btn:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.12); }
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  border-color: rgba(90,169,255,.35);
+  background: linear-gradient(180deg, rgba(90,169,255,.20), rgba(90,169,255,.08));
+}
+.btn-danger {
+  border-color: rgba(255,90,90,.35);
+  background: linear-gradient(180deg, rgba(255,90,90,.18), rgba(255,90,90,.06));
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line2);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line2);
+  background: rgba(255,255,255,.04);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+.badge.in    { color: var(--in);   box-shadow: var(--glow-in);  }
+.badge.out   { color: var(--out);  box-shadow: var(--glow-out); }
+.badge.adjust{ color: var(--adj);  box-shadow: var(--glow-adj); }
+
+.table {
+  width: 100%;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.thead, .trow, .tr {
+  display: grid;
+  gap: 14px;
+  align-items: center;
+}
+.thead {
+  padding: 14px 16px;
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(231,236,247,.70);
+  background: rgba(255,255,255,.03);
+  border-bottom: 1px solid var(--line);
+}
+.trow, .tr {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line2);
+  background: rgba(255,255,255,.01);
+}
+.trow:hover, .tr:hover { background: rgba(255,255,255,.03); }
+
+.right { justify-self: end; text-align: right; }
+.center { justify-self: center; text-align: center; }
+
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.08);
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-track { background: transparent; }
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.12) transparent;
+}
+
+body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.12);
+  border-radius: 999px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  background: #060612;
+}
+
+:focus { outline: none; }
+:focus-visible { box-shadow: 0 0 0 2px rgba(140,120,255,.35); }
+
+/* Si esas líneas vienen de bordes en cards/containers */
+* {
+  border-color: rgba(140, 120, 255, 0.16);
+}
+
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 60% 30%, rgba(120, 80, 255, 0.35), transparent 55%),
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: auto, 64px 64px, 64px 64px;
+  opacity: 0.45; /* baja esto si quieres menos líneas */
+  filter: blur(0px);
+}
+
+/* ===== Reset pro ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #0b0f1a;
+  color: #e9ecff;
+  overflow-x: hidden; /* 👈 evita “líneas blancas” por overflow */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Evita borde/blancos por elementos SVG/imagenes */
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Scroll bonito */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(160, 140, 255, 0.18);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.03);
+}

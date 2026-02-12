@@ -1,0 +1,454 @@
+<section class="page">
+  <header class="head">
+    <div>
+      <span class="eyebrow">Trazabilidad</span>
+      <h1>Movimientos</h1>
+      <p>Registra entradas, salidas y ajustes. Visualiza el pulso del inventario en tiempo real.</p>
+    </div>
+
+    <div class="head-actions">
+      <button class="ghost" (click)="cargar()" [disabled]="loading()">
+        {{ loading() ? 'Cargando...' : 'Recargar' }}
+      </button>
+    </div>
+  </header>
+
+  <section class="summary">
+    <div class="summary-card">
+      <span class="label">Movimientos</span>
+      <strong>{{ totalMovs() }}</strong>
+      <span class="hint">Historial total</span>
+    </div>
+    <div class="summary-card ok">
+      <span class="label">Entradas</span>
+      <strong>{{ entradasTotal() }}</strong>
+      <span class="hint">Unidades ingresadas</span>
+    </div>
+    <div class="summary-card warn">
+      <span class="label">Salidas</span>
+      <strong>{{ salidasTotal() }}</strong>
+      <span class="hint">Unidades egresadas</span>
+    </div>
+    <div class="summary-card accent">
+      <span class="label">Balance</span>
+      <strong>{{ balance() }}</strong>
+      <span class="hint">Entradas - salidas</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="card rfid-card">
+      <div class="card-head">
+        <div>
+          <h2>Escanear código RFID</h2>
+          <p class="muted">Lectura rápida con terminal inteligente.</p>
+        </div>
+        <button class="ghost" type="button" (click)="openRfid()">Abrir</button>
+      </div>
+      <div class="rfid-cta">
+        <span class="rfid-pill">Terminal RFID Inteligente</span>
+        <button class="primary" type="button" (click)="openRfid()">Iniciar escaneo</button>
+      </div>
+    </section>
+
+    <section class="card"
+      [class.tipo-entrada]="form.tipo==='ENTRADA'"
+      [class.tipo-salida]="form.tipo==='SALIDA'"
+      [class.tipo-ajuste]="form.tipo==='AJUSTE'"
+    >
+      <div class="card-head">
+        <div>
+          <h2>Registrar movimiento</h2>
+          <p class="muted">Flujo rápido y claro para entradas, salidas y ajustes.</p>
+        </div>
+        <div class="segmented">
+          <button class="chip chip-entrada" [class.active]="form.tipo==='ENTRADA'" (click)="setTipo('ENTRADA')">ENTRADA</button>
+          <button class="chip chip-salida" [class.active]="form.tipo==='SALIDA'" (click)="setTipo('SALIDA')">SALIDA</button>
+          <button class="chip chip-ajuste" [class.active]="form.tipo==='AJUSTE'" (click)="setTipo('AJUSTE')">AJUSTE</button>
+        </div>
+      </div>
+
+      <div class="form-shell">
+        <section class="form-left">
+          <div class="field">
+            <label>Categoría</label>
+            <select [ngModel]="form.categoria_id" (ngModelChange)="setCategoria($event)">
+              <option value="">Selecciona una categoría</option>
+              <option *ngFor="let c of categorias()" [value]="c.id">{{ c.nombre }}</option>
+            </select>
+          </div>
+
+          <ng-container *ngIf="form.tipo === 'ENTRADA'; else selectProducto">
+            <div class="field">
+              <label>Nombre del producto</label>
+              <input [(ngModel)]="form.nombre" placeholder="Camisa Oversize" />
+            </div>
+          </ng-container>
+
+          <ng-template #selectProducto>
+            <div class="field">
+              <label>Producto</label>
+              <select [ngModel]="form.producto_id" (ngModelChange)="form.producto_id = $event; form.eliminar_producto = null" [disabled]="!form.categoria_id">
+                <option value="">Selecciona un producto</option>
+                <option *ngFor="let p of productosOrdenados()" [value]="p.id">
+                {{ p.nombre }}
+                </option>
+              </select>
+            </div>
+          </ng-template>
+
+          <div class="field">
+            <label>Cantidad</label>
+            <input type="number" min="1" [ngModel]="form.cantidad" (ngModelChange)="form.cantidad = $event; form.eliminar_producto = null" />
+          </div>
+
+          <div class="field" *ngIf="form.tipo === 'AJUSTE'">
+            <label>Tipo de ajuste</label>
+            <div class="rfid-toggle">
+              <button
+                class="rfid-chip"
+                type="button"
+                [class.active]="form.ajuste_tipo === 'ENTRADA'"
+                (click)="form.ajuste_tipo = 'ENTRADA'; form.eliminar_producto = null"
+              >
+                Ajuste entrada
+              </button>
+              <button
+                class="rfid-chip"
+                type="button"
+                [class.active]="form.ajuste_tipo === 'SALIDA'"
+                (click)="form.ajuste_tipo = 'SALIDA'; form.eliminar_producto = null"
+              >
+                Ajuste salida
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-right">
+          <div class="details-card">
+            <div class="details-head">
+              <div>
+                <span class="details-title">Detalles del movimiento</span>
+                <span class="details-sub">Motivo y atributos extra</span>
+              </div>
+              <button type="button" class="ghost details-toggle" (click)="showDetalles.set(!showDetalles())">
+                {{ showDetalles() ? 'Ocultar' : 'Agregar detalles' }}
+              </button>
+            </div>
+
+            <div class="field">
+              <label>Motivo</label>
+              <input [(ngModel)]="form.motivo" placeholder="Compra / Venta / Ajuste..." />
+            </div>
+
+            <div class="details-grid" *ngIf="getManualTipoPayload() !== 'ENTRADA' && form.producto_id">
+              <div class="field">
+                <label>Stock actual</label>
+                <input [value]="getManualStockActual() ?? '—'" disabled />
+              </div>
+              <div class="field">
+                <label>Stock luego de salida</label>
+                <input [value]="getManualRestante() ?? '—'" disabled />
+              </div>
+            </div>
+
+            <div class="details-grid" *ngIf="needsManualDeleteDecision()">
+              <div class="field">
+                <label>Al quedar en 0</label>
+                <div class="rfid-toggle">
+                  <button
+                    class="rfid-chip"
+                    type="button"
+                    [class.active]="form.eliminar_producto === false"
+                    (click)="form.eliminar_producto = false"
+                  >
+                    Mantener producto
+                  </button>
+                  <button
+                    class="rfid-chip"
+                    type="button"
+                    [class.active]="form.eliminar_producto === true"
+                    (click)="form.eliminar_producto = true"
+                  >
+                    Eliminar producto
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="showDetalles()" class="details-grid">
+              <div class="field">
+                <label>UID / RFID</label>
+                <input
+                  [ngModel]="form.uid"
+                  (ngModelChange)="onUidChange($event)"
+                  placeholder="Código del tag"
+                />
+                <small class="error" *ngIf="uidLookupError()">{{ uidLookupError() }}</small>
+                <div class="uid-indicator" *ngIf="uidProducto()">
+                  <span>Producto existente:</span>
+                  <strong>{{ uidProducto()?.nombre || uidProducto()?.id }}</strong>
+                  <button type="button" class="ghost" (click)="uidDetallesOpen.set(!uidDetallesOpen())">
+                    {{ uidDetallesOpen() ? 'Ocultar detalles' : 'Ver detalles' }}
+                  </button>
+                </div>
+                <div class="uid-details" *ngIf="uidDetallesOpen()">
+                  <span>UID: {{ uidProducto()?.uid || form.uid }}</span>
+                  <span>Talla: {{ uidProducto()?.talla || '—' }}</span>
+                  <span>Color: {{ uidProducto()?.color || '—' }}</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Talla</label>
+                <input [(ngModel)]="form.talla" placeholder="S / M / L / 40" />
+              </div>
+
+              <div class="field">
+                <label>Color</label>
+                <input [(ngModel)]="form.color" placeholder="Azul / Negro" />
+              </div>
+
+              <div class="field">
+                <label>Descripción</label>
+                <input [(ngModel)]="form.descripcion" placeholder="Detalles del producto" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="form-actions">
+        <button class="primary" (click)="registrar()" [disabled]="saving()">
+          {{ saving() ? 'Guardando...' : 'Registrar movimiento' }}
+        </button>
+        <p class="error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+      </div>
+    </section>
+  </div>
+</section>
+
+<div class="modal-backdrop" *ngIf="showRfid()" (click)="closeRfid()"></div>
+
+<div class="rfid-modal" *ngIf="showRfid()">
+  <div class="rfid-head">
+    <div class="rfid-icon">⟡</div>
+    <button class="x" type="button" (click)="closeRfid()">✕</button>
+  </div>
+  
+  <h3>TERMINAL RFID INTELIGENTE</h3>
+  <div class="rfid-sub">SINCRONIZACIÓN EN TIEMPO REAL</div>
+
+  <div class="rfid-section">
+    <span class="rfid-label">Estado del escáner</span>
+    
+    <div *ngIf="!scannedUid()" class="rfid-scan scanning">
+      <span class="blink">📡</span> Aproxime el tag al lector...
+    </div>
+
+    <div *ngIf="scannedUid()" class="rfid-scan success">
+      <span class="icon">✅</span> 
+      <div>
+        <small>Tag detectado:</small>
+        <strong>{{ scannedUid() }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="rfid-grid">
+    <div class="rfid-block">
+      <span class="rfid-label">Naturaleza</span>
+      <div class="rfid-toggle">
+        <button
+          class="rfid-chip"
+          type="button"
+          [class.active]="rfidTipo() === 'ENTRADA'"
+          (click)="setRfidTipo('ENTRADA')"
+        >
+          Entrada
+        </button>
+        <button
+          class="rfid-chip"
+          type="button"
+          [class.active]="rfidTipo() === 'SALIDA'"
+          (click)="setRfidTipo('SALIDA')"
+        >
+          Salida
+        </button>
+        <button
+          class="rfid-chip"
+          type="button"
+          [class.active]="rfidTipo() === 'AJUSTE'"
+          (click)="setRfidTipo('AJUSTE')"
+        >
+          Ajuste
+        </button>
+      </div>
+    </div>
+    <div class="rfid-block">
+      <span class="rfid-label">Cantidad</span>
+      <input
+        class="rfid-qty"
+        type="number"
+        min="1"
+        [ngModel]="rfidCantidad()"
+        (ngModelChange)="rfidCantidad.set($event); rfidEliminarDecision.set(null)"
+      />
+    </div>
+  </div>
+
+  <div class="rfid-grid" *ngIf="rfidTipo() === 'AJUSTE'">
+    <div class="rfid-block">
+      <span class="rfid-label">Tipo de ajuste</span>
+      <div class="rfid-toggle">
+        <button
+          class="rfid-chip"
+          type="button"
+          [class.active]="rfidAjusteTipo() === 'ENTRADA'"
+          (click)="rfidAjusteTipo.set('ENTRADA')"
+        >
+          Ajuste entrada
+        </button>
+        <button
+          class="rfid-chip"
+          type="button"
+          [class.active]="rfidAjusteTipo() === 'SALIDA'"
+          (click)="rfidAjusteTipo.set('SALIDA'); rfidEliminarDecision.set(null)"
+        >
+          Ajuste salida
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rfid-grid" *ngIf="scannedUid() && !rfidProducto() && rfidTipo() === 'ENTRADA'">
+    <div class="rfid-block">
+      <span class="rfid-label">Nombre </span>
+      <input
+        class="rfid-input"
+        type="text"
+        placeholder="Nombre del producto"
+        [ngModel]="rfidNombre()"
+        (ngModelChange)="rfidNombre.set($event)"
+      />
+    </div>
+    <div class="rfid-block">
+      <span class="rfid-label">Categoría </span>
+      <select
+        class="rfid-input"
+        [ngModel]="rfidCategoriaId()"
+        (ngModelChange)="rfidCategoriaId.set($event)"
+      >
+        <option value="">Selecciona una categoría</option>
+        <option *ngFor="let c of categorias()" [value]="c.id">{{ c.nombre }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="rfid-grid" *ngIf="scannedUid() && !rfidProducto() && rfidTipo() === 'ENTRADA'">
+    <div class="rfid-block">
+      <span class="rfid-label">Talla </span>
+      <input
+        class="rfid-input"
+        type="text"
+        placeholder="S / M / L / 40"
+        [ngModel]="rfidTalla()"
+        (ngModelChange)="rfidTalla.set($event)"
+      />
+    </div>
+    <div class="rfid-block">
+      <span class="rfid-label">Color </span>
+      <input
+        class="rfid-input"
+        type="text"
+        placeholder="Azul / Negro"
+        [ngModel]="rfidColor()"
+        (ngModelChange)="rfidColor.set($event)"
+      />
+    </div>
+  </div>
+
+  <div class="rfid-grid" *ngIf="scannedUid() && !rfidProducto() && rfidTipo() === 'ENTRADA'">
+    <div class="rfid-block">
+      <span class="rfid-label">Descripción </span>
+      <input
+        class="rfid-input"
+        type="text"
+        placeholder="Detalles del producto"
+        [ngModel]="rfidDescripcion()"
+        (ngModelChange)="rfidDescripcion.set($event)"
+      />
+    </div>
+  </div>
+
+  <div class="rfid-status" *ngIf="rfidProducto()">
+    <span>Producto existente:</span>
+    <strong>{{ rfidProducto()?.nombre || rfidProducto()?.id }}</strong>
+    <button type="button" class="ghost" (click)="rfidDetallesOpen.set(!rfidDetallesOpen())">
+      {{ rfidDetallesOpen() ? 'Ocultar detalles' : 'Ver detalles' }}
+    </button>
+  </div>
+  <div class="rfid-status" *ngIf="rfidInfo()">
+    {{ rfidInfo() }}
+  </div>
+  <div class="rfid-details" *ngIf="rfidProducto() && rfidDetallesOpen()">
+    <span>UID: {{ rfidProducto()?.uid || scannedUid() }}</span>
+    <span>Talla: {{ rfidProducto()?.talla || '—' }}</span>
+    <span>Color: {{ rfidProducto()?.color || '—' }}</span>
+  </div>
+
+  <div class="rfid-details" *ngIf="rfidProducto()">
+    <span>Stock actual: {{ getRfidStockActual() ?? '—' }}</span>
+    <span *ngIf="getRfidTipoPayload() === 'SALIDA' && getRfidRestante() !== null">Stock luego de salida: {{ getRfidRestante() }}</span>
+  </div>
+
+  <div class="rfid-grid" *ngIf="rfidProducto() && needsDeleteDecision()">
+    <div class="rfid-block">
+      <span class="rfid-label">Al quedar en 0</span>
+      <div class="rfid-toggle">
+        <button
+          class="rfid-chip"
+          type="button"
+          [class.active]="rfidEliminarDecision() === 'keep'"
+          (click)="rfidEliminarDecision.set('keep')"
+        >
+          Mantener producto
+        </button>
+        <button
+          class="rfid-chip"
+          type="button"
+          [class.active]="rfidEliminarDecision() === 'delete'"
+          (click)="rfidEliminarDecision.set('delete')"
+        >
+          Eliminar producto
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rfid-grid">
+    <div class="rfid-block">
+      <span class="rfid-label">Motivo</span>
+      <input
+        class="rfid-input"
+        type="text"
+        placeholder="Compra / Venta / Ajuste..."
+        [ngModel]="form.motivo"
+        (ngModelChange)="form.motivo = $event"
+      />
+    </div>
+  </div>
+  <div class="rfid-status error" *ngIf="rfidError()">{{ rfidError() }}</div>
+
+  <button 
+    class="rfid-confirm" 
+    type="button" 
+    (click)="confirmRfid()"
+    [disabled]="!scannedUid() || saving() || isScanning()" 
+    [class.ready]="scannedUid()"
+  >
+    {{ scannedUid() ? 'Confirmar registro' : 'Esperando lectura...' }}
+  </button>
+  <div class="rfid-status" *ngIf="successMsg()">{{ successMsg() }}</div>
+</div>

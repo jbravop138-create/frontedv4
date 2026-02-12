@@ -1,0 +1,263 @@
+<section class="u-dash" *ngIf="data() as d">
+  <!-- Header -->
+  <header class="u-head">
+    <div class="title">
+      <h1>Panel de Usuario</h1>
+      <p>Acceso rápido a tus movimientos y estado de trabajo</p>
+    </div>
+    <div class="right">
+      <div class="pill">
+        <span class="dot"></span>
+        <span>Operativo</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- KPI cards -->
+  <div class="kpis">
+    <article class="kpi">
+      <div class="kpi-top">
+        <span class="icon">⚡</span>
+        <span class="label">Movimientos hoy</span>
+      </div>
+      <div class="value">{{ d?.resumen?.movimientos_hoy ?? 0 }}</div>
+      <div class="hint">Hoy (desde 00:00)</div>
+      <div class="wm">⚡</div>
+    </article>
+
+    <article class="kpi">
+      <div class="kpi-top">
+        <span class="icon">🧾</span>
+        <span class="label">Últimos movimientos</span>
+      </div>
+      <div class="value">{{ (d?.movimientos_recientes?.length ?? 0) }}</div>
+      <div class="hint">Últimos 10</div>
+      <div class="wm">🧾</div>
+    </article>
+
+    <article class="kpi glass">
+      <div class="kpi-top">
+        <span class="icon">🧠</span>
+        <span class="label">Consejo rápido</span>
+      </div>
+      <div class="tip">
+        {{ consejo() }}
+      </div>
+      <div class="wm">🧠</div>
+    </article>
+  </div>
+
+  <!-- Main grid -->
+  <div class="grid">
+    <section class="panel highlight">
+      <div class="panel-head">
+        <div>
+          <h2>Centro rápido</h2>
+          <p class="muted">Acciones inmediatas y estado operativo.</p>
+        </div>
+      </div>
+
+      <div class="quick-grid">
+        <div class="quick-card">
+          <span class="label">Movimientos hoy</span>
+          <strong>{{ d?.resumen?.movimientos_hoy ?? 0 }}</strong>
+          <span class="hint">Actividad del día</span>
+        </div>
+        <div class="quick-card">
+          <span class="label">Últimos movimientos</span>
+          <strong>{{ d?.movimientos_recientes?.length ?? 0 }}</strong>
+          <span class="hint">Últimas operaciones</span>
+        </div>
+        <div class="quick-card accent">
+          <span class="label">Low Stock</span>
+          <strong>{{ vm().lowStockCount }}</strong>
+          <span class="hint">Alertas activas</span>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn primary" type="button" (click)="openModal()">
+          + Movimiento rápido
+        </button>
+        <button class="btn" type="button" (click)="openHistory()">
+          Ver últimos movimientos
+        </button>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="panel mini">
+        <h3>Atajos</h3>
+        <div class="actions">
+          <button class="btn primary" type="button" (click)="openModal()">
+            + Movimiento rápido
+          </button>
+
+          <button class="btn" type="button" (click)="openHistory()">
+            Ver últimos movimientos
+          </button>
+
+          <button class="btn" type="button" (click)="irInventario()">
+            Ir a inventario
+          </button>
+        </div>
+      </section>
+
+      <section class="panel mini">
+        <h3>Estado</h3>
+        <div class="state">
+          <div class="state-item">
+            <span class="k">Sesión</span>
+            <span class="v ok">Activa</span>
+          </div>
+          <div class="state-item">
+            <span class="k">Rol</span>
+            <span class="v">Usuario</span>
+          </div>
+          <div class="state-item">
+            <span class="k">Último movimiento</span>
+            <span class="v">
+              {{
+                (d?.movimientos_recientes?.[0]?.created_at ?? d?.movimientos_recientes?.[0]?.fecha)
+                  ? ((d.movimientos_recientes[0].created_at ?? d.movimientos_recientes[0].fecha) | date:'short')
+                  : '—'
+              }}
+            </span>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <!-- ✅ MODAL MOVIMIENTO RÁPIDO -->
+  <div class="modal-backdrop" *ngIf="modalOpen()" (click)="closeModal()"></div>
+
+  <div class="modal" *ngIf="modalOpen()">
+    <div class="modal-head">
+      <h3>Movimiento rápido</h3>
+      <button class="x" type="button" (click)="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <label>Tipo</label>
+      <div class="chips">
+        <button class="chip chip-entrada" [class.active]="$any(form.tipo) === 'ENTRADA'" (click)="setTipo('ENTRADA')" type="button">ENTRADA</button>
+        <button class="chip chip-salida" [class.active]="$any(form.tipo) === 'SALIDA'" (click)="setTipo('SALIDA')" type="button">SALIDA</button>
+        <button class="chip chip-ajuste" [class.active]="$any(form.tipo) === 'AJUSTE'" (click)="setTipo('AJUSTE')" type="button">AJUSTE</button>
+      </div>
+
+      <label>Categoría</label>
+      <select [ngModel]="form.categoria_id" (ngModelChange)="setCategoria($event)">
+        <option value="">Selecciona una categoría</option>
+        <option *ngFor="let c of categorias()" [value]="c.id">{{ c.nombre }}</option>
+      </select>
+
+      <ng-container *ngIf="form.tipo === 'ENTRADA'; else selectProductoUser">
+        <label>Nombre del producto</label>
+        <input [(ngModel)]="form.nombre" placeholder="Camisa Oversize" />
+
+
+        <button type="button" class="btn" (click)="showDetalles.set(!showDetalles())">
+          {{ showDetalles() ? 'Ocultar detalles' : 'Detalles' }}
+        </button>
+
+        <div *ngIf="showDetalles()" class="details">
+          <label>Talla</label>
+          <input [(ngModel)]="form.talla" placeholder="S / M / L / 40" />
+
+          <label>Color</label>
+          <input [(ngModel)]="form.color" placeholder="Azul / Negro" />
+
+          <label>Descripción</label>
+          <input [(ngModel)]="form.descripcion" placeholder="Detalles del producto" />
+        </div>
+      </ng-container>
+
+      <ng-template #selectProductoUser>
+        <label>Producto</label>
+        <select
+          [ngModel]="form.producto_id"
+          (ngModelChange)="form.producto_id = $event"
+          [disabled]="!form.categoria_id"
+        >
+          <option value="">Selecciona un producto</option>
+          <option *ngFor="let p of productosOrdenados()" [value]="p.id">
+            {{ p.nombre }}
+          </option>
+        </select>
+      </ng-template>
+
+      <label>Cantidad</label>
+      <input type="number" min="1" [(ngModel)]="form.cantidad" />
+
+      <label>Motivo</label>
+      <input [(ngModel)]="form.motivo" placeholder="Compra / Venta / Ajuste..." />
+
+      <p class="err" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" type="button" (click)="closeModal()">Cancelar</button>
+      <button class="btn primary" type="button" (click)="submitMovimiento()" [disabled]="saving()">
+        {{ saving() ? 'Guardando...' : 'Registrar' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="historyOpen()" (click)="closeHistory()"></div>
+
+  <div class="modal history" *ngIf="historyOpen()">
+    <div class="modal-head">
+      <h3>Últimos movimientos</h3>
+      <button class="x" type="button" (click)="closeHistory()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="hist-row header">
+        <span>Tipo</span>
+        <span>Producto</span>
+        <span class="num">Cantidad</span>
+        <span class="muted">Fecha</span>
+      </div>
+
+      <div class="hist-row" *ngFor="let m of rows()">
+        <span
+          class="badge"
+          [class.entrada]="m.tipo === 'ENTRADA'"
+          [class.salida]="m.tipo === 'SALIDA'"
+          [class.ajuste]="m.tipo === 'AJUSTE'"
+        >
+          {{ m.tipo }}
+          <small class="subtipo" *ngIf="m.ajuste_tipo">{{ m.ajuste_tipo.toLowerCase() }}</small>
+        </span>
+        <span class="prod truncate">
+          {{ m?.producto ?? 'Sin producto' }}
+        </span>
+        <span class="num">{{ m?.cantidad ?? 0 }}</span>
+        <span class="muted">
+          {{ (m?.fecha) | date:'short' }}
+        </span>
+      </div>
+
+      <div class="empty" *ngIf="rows().length === 0">
+        Aún no tienes movimientos.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- estados fuera del *ngIf -->
+<section class="u-dash" *ngIf="loading()">
+  <div class="panel">
+    <h2>Cargando dashboard...</h2>
+    <p class="muted">Un momento, estamos trayendo tus datos.</p>
+  </div>
+</section>
+
+<section class="u-dash" *ngIf="!loading() && errorMsg() as msg">
+  <div class="panel">
+    <h2>No se pudo cargar</h2>
+    <p class="muted">{{ msg }}</p>
+    <button class="btn primary" (click)="load()">Reintentar</button>
+  </div>
+</section>

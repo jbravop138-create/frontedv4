@@ -1,0 +1,196 @@
+<section class="history">
+  <header class="page-head">
+    <div class="system-pill">
+      <span class="dot"></span>
+      <span class="txt">SISTEMA ACTIVO</span>
+    </div>
+    <h1 class="page-title">REGISTRO HISTÓRICO</h1>
+  </header>
+
+  <section class="summary">
+    <div class="summary-card">
+      <span class="label">Total</span>
+      <strong>{{ total() }}</strong>
+      <span class="hint">Movimientos filtrados</span>
+    </div>
+    <div class="summary-card ok">
+      <span class="label">Entradas</span>
+      <strong>{{ entradas() }}</strong>
+      <span class="hint">Ingresos</span>
+    </div>
+    <div class="summary-card warn">
+      <span class="label">Salidas</span>
+      <strong>{{ salidas() }}</strong>
+      <span class="hint">Egresos</span>
+    </div>
+    <div class="summary-card accent">
+      <span class="label">Ajustes</span>
+      <strong>{{ ajustes() }}</strong>
+      <span class="hint">Correcciones</span>
+    </div>
+  </section>
+
+  <div class="card">
+    <div class="card-top">
+      <h2>Bitácora de Operaciones</h2>
+      <span class="muted">Mostrando últimos movimientos</span>
+    </div>
+
+    <div class="filters">
+      <div class="f-item">
+        <label>Buscar</label>
+        <input
+          type="text"
+          placeholder="Producto, usuario o motivo..."
+          (input)="onSearch(($any($event.target)).value)"
+        />
+      </div>
+
+      <div class="f-item">
+        <label>Categoría</label>
+        <select [ngModel]="categoria()" (ngModelChange)="onCategoria($event)">
+          <option value="all">Todas</option>
+          <option *ngFor="let c of categorias()" [value]="c.id">{{ c.nombre }}</option>
+        </select>
+      </div>
+
+      <div class="f-item">
+        <label>Tipo</label>
+        <select [ngModel]="tipo()" (ngModelChange)="onTipo($event)">
+          <option value="all">Todos</option>
+          <option value="ENTRADA">Entrada</option>
+          <option value="SALIDA">Salida</option>
+          <option value="AJUSTE">Ajuste</option>
+        </select>
+      </div>
+
+      <div class="meta">
+        <span class="chip">Total: {{ total() }}</span>
+        <span class="chip" *ngIf="loading()">Cargando...</span>
+        <span class="chip danger" *ngIf="error()">{{ error() }}</span>
+        <button class="chip ghost" (click)="clearFilters()">Limpiar filtros</button>
+      </div>
+    </div>
+
+    <section class="table-wrap" *ngIf="!loading() && !error()">
+      <div class="table">
+        <div class="thead">
+          <div>FECHA / HORA</div>
+          <div>PRODUCTO</div>
+          <div>ACCIONES</div>
+          <div>TIPO</div>
+          <div class="center">CANTIDAD</div>
+          <div>RESPONSABLE</div>
+          <div>MOTIVO</div>
+        </div>
+
+        <div class="tr" *ngFor="let m of filteredItems(); trackBy: trackById">
+          <div class="muted">{{ m.fecha | date:'short' }}</div>
+
+          <div class="strong">
+            {{ m.producto_nombre }}
+            <div class="sub muted">Producto</div>
+          </div>
+
+          <div class="actions">
+            <button
+              class="icon-btn"
+              title="Editar producto"
+              (click)="openEdit(m)"
+              [disabled]="!m.producto_id"
+              [class.disabled]="!m.producto_id"
+            >
+              ✎
+            </button>
+          </div>
+
+          <div>
+            <span class="badge"
+              [class.in]="m.tipo==='ENTRADA'"
+              [class.out]="m.tipo==='SALIDA'"
+              [class.adjust]="m.tipo==='AJUSTE'">
+              <span class="arrow" *ngIf="m.tipo==='ENTRADA'">↘</span>
+              <span class="arrow" *ngIf="m.tipo==='SALIDA'">↗</span>
+              <span class="arrow" *ngIf="m.tipo==='AJUSTE'">⟲</span>
+              {{ m.tipo }}
+              <small class="subtipo" *ngIf="m.ajuste_tipo">{{ m.ajuste_tipo.toLowerCase() }}</small>
+            </span>
+          </div>
+
+          <div class="center qty">{{ m.cantidad }}</div>
+          <div class="muted">{{ m.usuario_nombre }}</div>
+          <div class="muted italic">{{ m.motivo }}</div>
+        </div>
+
+        <div class="empty" *ngIf="filteredItems().length === 0">
+          No hay movimientos para los filtros seleccionados.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal editar producto -->
+  <div class="modal-backdrop" *ngIf="editOpen()" (click)="closeEdit()"></div>
+  <div class="modal" *ngIf="editOpen()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h2>EDITAR PRODUCTO</h2>
+        <button class="close" (click)="closeEdit()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <label>Nombre</label>
+        <input
+          type="text"
+          [ngModel]="editForm().nombre"
+          (ngModelChange)="updateEditForm('nombre', $event)"
+          placeholder="Nombre del producto"
+        />
+
+        <label>Categoría</label>
+        <select
+          [ngModel]="editForm().categoria_id"
+          (ngModelChange)="updateEditForm('categoria_id', $event)"
+        >
+          <option value="">Sin categoría</option>
+          <option *ngFor="let c of categorias()" [value]="c.id">{{ c.nombre }}</option>
+        </select>
+
+        <div class="row-2">
+          <div>
+            <label>Talla</label>
+            <input
+              type="text"
+              [ngModel]="editForm().talla"
+              (ngModelChange)="updateEditForm('talla', $event)"
+              placeholder="Ej: M"
+            />
+          </div>
+          <div>
+            <label>Color</label>
+            <input
+              type="text"
+              [ngModel]="editForm().color"
+              (ngModelChange)="updateEditForm('color', $event)"
+              placeholder="Ej: Azul"
+            />
+          </div>
+        </div>
+
+        <label>Detalles</label>
+        <textarea
+          rows="3"
+          [ngModel]="editForm().descripcion"
+          (ngModelChange)="updateEditForm('descripcion', $event)"
+          placeholder="Descripción o detalles del producto"
+        ></textarea>
+
+        <p class="modal-error" *ngIf="editError()">{{ editError() }}</p>
+
+        <button class="btn btn-save" (click)="saveEdit()" [disabled]="editLoading()">
+          ✓ GUARDAR CAMBIOS
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

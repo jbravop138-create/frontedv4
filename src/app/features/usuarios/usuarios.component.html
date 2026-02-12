@@ -1,0 +1,175 @@
+<section class="usuarios-page">
+  <!-- Header -->
+  <header class="usuarios-head">
+    <div>
+      <div class="chip">
+        <span class="dot"></span>
+        <span>SISTEMA ACTIVO</span>
+      </div>
+
+      <h1>GESTIÓN DE IDENTIDADES</h1>
+      <p>Administración de usuarios del sistema</p>
+    </div>
+
+    <button class="btn btn-primary" (click)="openCreate()">
+      <span class="icon">+</span>
+      AGREGAR PERSONAL
+    </button>
+  </header>
+
+  <!-- Toolbar -->
+  <div class="usuarios-toolbar">
+      <div class="search">
+      <span class="search-ico">⌕</span>
+      <input
+        type="text"
+        placeholder="Buscar usuarios por nombre..."
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+      />
+    </div>
+
+    <div class="status" *ngIf="loading()">Cargando...</div>
+    <div class="status error" *ngIf="error()">{{ error() }}</div>
+  </div>
+
+  <!-- Grid cards -->
+  <div class="usuarios-grid">
+    <article class="user-card" *ngFor="let u of filtered()">
+      <div class="badge" [class.admin]="u.role === 'admin'" [class.user]="u.role === 'user'">
+        {{ u.role === 'admin' ? 'ADMIN' : 'USER' }}
+      </div>
+
+      <div class="avatar">{{ initials(u.full_name) }}</div>
+
+      <div class="user-name">{{ u.full_name }}</div>
+
+      <div class="user-meta">
+        <div class="meta-row">
+          <span class="meta-ico">@</span>
+          <span class="meta-text">{{ u.username }}</span>
+        </div>
+
+        <div class="meta-row" *ngIf="u.email">
+          <span class="meta-ico">✉</span>
+          <span class="meta-text">{{ u.email }}</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="active-pill" [class.off]="!u.is_active">
+          {{ u.is_active ? 'ACTIVO' : 'INACTIVO' }}
+        </div>
+
+        <div class="actions">
+          <button class="icon-btn" title="Editar" (click)="openEdit(u)">✎</button>
+          <button
+            class="icon-btn danger"
+            title="Eliminar"
+            (click)="openDelete(u)"
+            [disabled]="u.is_active"
+            [class.disabled]="u.is_active"
+          >
+            🗑
+          </button>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" *ngIf="modalOpen()" (click)="closeModal()"></div>
+
+  <div class="modal" *ngIf="modalOpen()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h2>CONFIGURAR PERFIL</h2>
+        <button class="close" (click)="closeModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <label>NOMBRE COMPLETO</label>
+        <input
+          type="text"
+          [ngModel]="form().full_name"
+          (ngModelChange)="updateForm({ full_name: $event })"
+          placeholder="Ej: Cajero Principal"
+        />
+
+        <div class="row-2">
+          <div>
+            <label>USERNAME</label>
+            <input
+              type="text"
+              [ngModel]="form().username"
+              (ngModelChange)="updateForm({ username: $event })"
+              placeholder="Ej: cajero1"
+            />
+          </div>
+
+          <div>
+            <label>ROL</label>
+            <select
+              [ngModel]="form().role"
+              (ngModelChange)="updateForm({ role: $event })"
+            >
+              <option value="user">Personal</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+        </div>
+
+        <label>CONTRASEÑA</label>
+        <input
+          type="password"
+          [ngModel]="form().password"
+          (ngModelChange)="updateForm({ password: $event })"
+          [placeholder]="modalMode() === 'edit' ? 'Dejar vacío para no cambiar' : 'Mínimo 6 caracteres'"
+        />
+
+        <div class="row-2" *ngIf="modalMode() === 'edit'">
+          <div class="toggle">
+            <input
+              id="active"
+              type="checkbox"
+              [checked]="form().is_active"
+              (change)="updateForm({ is_active: ($any($event.target)).checked })"
+            />
+            <label for="active">Usuario activo</label>
+          </div>
+          <div></div>
+        </div>
+
+        <p class="modal-error" *ngIf="error()">{{ error() }}</p>
+
+        <button class="btn btn-save" (click)="save()" [disabled]="loading()">
+          ✓ GUARDAR IDENTIDAD
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirm -->
+  <div class="modal-backdrop" *ngIf="confirmOpen()" (click)="closeDelete()"></div>
+  <div class="modal" *ngIf="confirmOpen()">
+    <div class="modal-card confirm-card" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h2>CONFIRMAR ELIMINACIÓN</h2>
+        <button class="close" (click)="closeDelete()">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">
+          ¿Seguro que quieres eliminar a
+          <strong>{{ confirmUser()?.full_name || confirmUser()?.username }}</strong>?
+        </p>
+        <div class="confirm-actions">
+          <button class="btn btn-ghost" (click)="closeDelete()">Cancelar</button>
+          <button class="btn btn-danger" (click)="removeConfirmed()" [disabled]="loading()">
+            Sí, eliminar
+          </button>
+        </div>
+        <p class="modal-error" *ngIf="error()">{{ error() }}</p>
+      </div>
+    </div>
+  </div>
+</section>

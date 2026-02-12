@@ -1,0 +1,33 @@
+<aside class="sidebar" [class.collapsed]="collapsed()">
+  <div class="brand">
+    <div class="logo">⦿</div>
+    <div class="title" *ngIf="!collapsed()">STOCK360</div>
+
+    <button class="collapse-btn" (click)="toggle()" title="Ocultar/Mostrar">
+      ☰
+    </button>
+  </div>
+
+  <div class="user-box" *ngIf="auth.user() as u">
+    <div class="user-title">Usuario Activo</div>
+    <div class="user-name">{{ u.full_name }}</div>
+    <div class="role" *ngIf="!collapsed()">{{ u.role === 'admin' ? 'Administrador' : 'Personal' }}</div>
+  </div>
+
+  <nav class="menu">
+    <a
+      class="item"
+      *ngFor="let item of nav()"
+      [routerLink]="item.fullPath"
+      routerLinkActive="active"
+    >
+      <span class="icon">{{ item.icon }}</span>
+      <span class="text" *ngIf="!collapsed()">{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <button class="logout" (click)="logout()">
+    <span class="icon">⟵</span>
+    <span class="text" *ngIf="!collapsed()">Cerrar sesión</span>
+  </button>
+</aside>

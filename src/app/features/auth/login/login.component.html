@@ -1,0 +1,49 @@
+<div class="login-shell">
+  <div class="bg-grid"></div>
+
+  <div class="login-card">
+    <div class="logo-wrap">
+      <div class="logo-core">
+        <div class="orb"></div>
+      </div>
+      <h1>STOCK360</h1>
+      <p>CONTROL VIVO</p>
+    </div>
+
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="tagline">Acceso táctico al núcleo operativo</div>
+
+      <label class="label">USUARIO</label>
+      <div class="input">
+        <span class="icon">◎</span>
+        <input
+          type="text"
+          placeholder="Ej: admin"
+          formControlName="identifier"
+          autocomplete="username"
+        />
+      </div>
+
+      <label class="label">CONTRASEÑA</label>
+      <div class="input">
+        <span class="icon">⦿</span>
+        <input
+          type="password"
+          placeholder="••••••••"
+          formControlName="password"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button class="btn" type="submit" [disabled]="loading()">
+        <span *ngIf="!loading()">ENTRAR AL SISTEMA</span>
+        <span *ngIf="loading()">Ingresando...</span>
+      </button>
+
+      <div class="error" *ngIf="errorMsg()">{{ errorMsg() }}</div>
+
+      <div class="helper">¿Olvidaste tu acceso? Contacta a soporte interno.</div>
+      <div class="footer">STOCK360 • SESIÓN SEGURA</div>
+    </form>
+  </div>
+</div>

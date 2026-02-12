@@ -1,0 +1,52 @@
+<header class="topbar" [class.open]="mobileOpen">
+  <div class="left">
+    <button class="nav-btn mobile" type="button" (click)="toggleMobile.emit()">
+      <span class="burger"></span>
+    </button>
+    <div class="brand">
+      <span class="orb"></span>
+      <div class="name">
+        <span class="label">Stock360</span>
+        <span class="sub">Control vivo</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav-links" [class.open]="mobileOpen">
+    <a
+      class="nav-item"
+      *ngFor="let item of nav()"
+      [routerLink]="item.fullPath"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+      (click)="closeMobile.emit()"
+    >
+      <span class="icon">{{ item.icon }}</span>
+      <span class="text">{{ item.label }}</span>
+      <span class="pulse"></span>
+    </a>
+  </nav>
+
+  <div class="right">
+    <div class="pill" *ngIf="user() as u">
+      <span class="dot"></span>
+      <span class="role">{{ u.role === 'admin' ? 'Administrador' : 'Operativo' }}</span>
+      <span class="user">{{ u.full_name }}</span>
+    </div>
+    <button class="nav-btn logout" type="button" (click)="openLogout()">Cerrar sesión</button>
+  </div>
+</header>
+
+<div class="modal-backdrop" *ngIf="confirmLogoutOpen()" (click)="closeLogout()"></div>
+
+<div class="logout-modal" *ngIf="confirmLogoutOpen()">
+  <div class="modal-head">
+    <h4>¿Cerrar sesión?</h4>
+    <button class="x" type="button" (click)="closeLogout()">✕</button>
+  </div>
+  <p class="modal-text">Tu sesión actual se cerrará y deberás iniciar nuevamente.</p>
+  <div class="modal-actions">
+    <button class="btn ghost" type="button" (click)="closeLogout()">Cancelar</button>
+    <button class="btn danger" type="button" (click)="logout()">Cerrar sesión</button>
+  </div>
+</div>

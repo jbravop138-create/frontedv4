@@ -1,0 +1,841 @@
+.page { padding: 28px; color: #e9ecff; }
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 44px;
+    margin: 8px 0 10px;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #eaf3ff, #9fe0ff 40%, #ffd8a6 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  p {
+    opacity: .75;
+    margin: 0;
+    max-width: 620px;
+    line-height: 1.5;
+  }
+}
+
+.head-actions { display: flex; align-items: center; gap: 12px; }
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: rgba(170, 210, 255, .8);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(120, 210, 255, 0.8), transparent);
+}
+
+.grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+
+.card, .trend {
+  background:
+    radial-gradient(700px 240px at 10% -20%, rgba(120, 210, 255, 0.12), transparent 60%),
+    rgba(16, 18, 40, .6);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  padding: 20px 22px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+}
+
+.rfid-card .card-head {
+  margin-bottom: 10px;
+}
+
+.rfid-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(120, 160, 255, 0.16);
+  background: rgba(8, 12, 22, 0.55);
+}
+
+.rfid-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(120, 210, 255, 0.3);
+  color: rgba(190, 230, 255, 0.9);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.card-head h2 { margin: 0 0 6px; font-size: 22px; }
+.card-head h2 {
+  font-size: 24px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #e9f1ff;
+}
+.muted { opacity: .7; }
+.segmented { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.summary-card {
+  background: rgba(10, 14, 28, .6);
+  border: 1px solid rgba(130, 110, 255, .2);
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: grid;
+  gap: 8px;
+
+  .label {
+    font-size: 11px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(233,236,255,.65);
+  }
+
+  strong { font-size: 28px; }
+  .hint { color: rgba(233,236,255,.62); font-size: 12px; }
+
+  &.ok { border-color: rgba(120, 220, 255, .28); }
+  &.warn { border-color: rgba(255, 196, 88, .34); }
+  &.accent { border-color: rgba(157, 102, 255, .38); }
+}
+
+.trend-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.legend {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  opacity: .8;
+
+  .k {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .k.entradas { background: rgba(120, 200, 255, 0.55); }
+  .k.salidas { background: rgba(255, 90, 90, 0.55); }
+}
+
+.bars {
+  display: grid;
+  gap: 10px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 90px;
+  gap: 12px;
+  align-items: center;
+}
+
+.bar-track {
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  display: flex;
+  gap: 6px;
+  padding: 3px;
+}
+
+.bar {
+  height: 100%;
+  border-radius: 999px;
+  background: rgba(120, 200, 255, 0.34);
+  border: 1px solid rgba(120, 200, 255, 0.3);
+}
+
+.bar.salidas {
+  background: rgba(255, 90, 90, 0.32);
+  border-color: rgba(255, 90, 90, 0.28);
+}
+
+.bar-values {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  font-size: 12px;
+}
+
+.bar-values .val {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(140, 160, 255, 0.16);
+}
+
+.bar-values .val.salidas {
+  border-color: rgba(255, 90, 90, 0.28);
+}
+
+.uid-indicator,
+.rfid-status {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: rgba(233,236,255,.75);
+}
+
+.uid-indicator strong,
+.rfid-status strong {
+  color: #e9f1ff;
+}
+
+.uid-details,
+.rfid-details {
+  margin-top: 6px;
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(233,236,255,.7);
+}
+
+.row { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+.between { justify-content: space-between; }
+
+.chip {
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.05);
+  color: #dfe6ff;
+  cursor: pointer;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-size: 11px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.chip.active { border-color: rgba(120, 210, 255, .75); background: rgba(120, 210, 255, .15); }
+
+.chip::after {
+  content: "";
+  position: absolute;
+  inset: -40% auto auto -40%;
+  width: 80%;
+  height: 200%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);
+  transform: translateX(-120%);
+  transition: transform .5s ease;
+  opacity: .5;
+}
+
+.chip:hover {
+  transform: translateY(-1px);
+}
+
+.chip:hover::after {
+  transform: translateX(120%);
+}
+
+.chip-entrada {
+  border-color: rgba(90, 210, 255, .35);
+  background: rgba(30, 120, 180, .15);
+  color: #cdefff;
+}
+
+.chip-salida {
+  border-color: rgba(255, 130, 110, .35);
+  background: rgba(160, 60, 60, .18);
+  color: #ffd9d2;
+}
+
+.chip-ajuste {
+  border-color: rgba(255, 210, 120, .35);
+  background: rgba(180, 120, 40, .18);
+  color: #ffeac6;
+}
+
+.chip-entrada.active {
+  border-color: rgba(110, 220, 255, .9);
+  box-shadow: 0 0 18px rgba(110, 220, 255, .35);
+}
+
+.chip-salida.active {
+  border-color: rgba(255, 140, 120, .9);
+  box-shadow: 0 0 18px rgba(255, 140, 120, .35);
+}
+
+.chip-ajuste.active {
+  border-color: rgba(255, 210, 120, .9);
+  box-shadow: 0 0 18px rgba(255, 210, 120, .35);
+}
+
+.form-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: 18px;
+}
+
+.form-left,
+.form-right {
+  display: grid;
+  gap: 14px;
+}
+
+.field { display: grid; gap: 6px; }
+.field.full { grid-column: 1 / -1; }
+
+.details-card {
+  border-radius: 20px;
+  padding: 12px;
+  border: 1px solid rgba(120, 160, 255, 0.18);
+  background:
+    radial-gradient(500px 240px at 20% -20%, rgba(120, 210, 255, 0.12), transparent 60%),
+    rgba(10, 14, 24, 0.55);
+}
+
+.details-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.details-title {
+  display: block;
+  font-size: 12px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(200, 220, 255, .85);
+}
+
+.details-sub {
+  display: block;
+  font-size: 12px;
+  color: rgba(190, 205, 255, .6);
+  margin-top: 4px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(120, 200, 255, 0.2);
+}
+
+.details-toggle { width: fit-content; }
+
+.inputs label, .field label {
+  display:block;
+  margin: 0 0 2px;
+  opacity: 1;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: rgba(220, 235, 255, 0.95);
+  padding-left: 8px;
+  position: relative;
+}
+
+.inputs label::before,
+.field label::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 55%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(120deg, rgba(120, 210, 255, 0.9), rgba(255, 190, 120, 0.85));
+  box-shadow: 0 0 8px rgba(120, 210, 255, 0.35);
+  opacity: .9;
+}
+
+.tipo-entrada .inputs label::before,
+.tipo-entrada .field label::before {
+  background: linear-gradient(120deg, rgba(110, 220, 255, 0.95), rgba(120, 255, 230, 0.85));
+  box-shadow: 0 0 8px rgba(110, 220, 255, 0.4);
+}
+
+.tipo-salida .inputs label::before,
+.tipo-salida .field label::before {
+  background: linear-gradient(120deg, rgba(255, 140, 120, 0.95), rgba(255, 190, 150, 0.85));
+  box-shadow: 0 0 8px rgba(255, 140, 120, 0.35);
+}
+
+.tipo-ajuste .inputs label::before,
+.tipo-ajuste .field label::before {
+  background: linear-gradient(120deg, rgba(255, 210, 120, 0.95), rgba(200, 140, 255, 0.85));
+  box-shadow: 0 0 8px rgba(200, 140, 255, 0.35);
+}
+.field {
+  position: relative;
+  padding: 4px;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(120, 210, 255, 0.25), rgba(120, 90, 255, 0.18)) border-box;
+}
+
+.field::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(120, 210, 255, 0.8), rgba(255, 190, 120, 0.7));
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+
+.field input,
+.field select,
+.inputs input,
+.inputs select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(140% 140% at 10% 0%, rgba(120, 200, 255, 0.12), transparent 60%),
+    rgba(8, 12, 22, 0.75);
+  color: #eef3ff;
+  outline: none;
+  box-shadow: inset 0 0 0 1px rgba(20, 30, 60, 0.6);
+  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+  appearance: none;
+}
+
+.field input::placeholder {
+  color: rgba(190, 210, 255, 0.45);
+}
+
+.field:focus-within {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(60, 120, 255, 0.2);
+}
+
+.field:focus-within::after {
+  opacity: 1;
+}
+
+.field select {
+  background-image:
+    radial-gradient(140% 140% at 10% 0%, rgba(120, 200, 255, 0.12), transparent 60%),
+    linear-gradient(90deg, rgba(8, 12, 22, 0.75), rgba(8, 12, 22, 0.75)),
+    linear-gradient(45deg, transparent 50%, rgba(190, 210, 255, 0.8) 50%),
+    linear-gradient(135deg, rgba(190, 210, 255, 0.8) 50%, transparent 50%);
+  background-position:
+    0 0,
+    0 0,
+    calc(100% - 18px) 55%,
+    calc(100% - 12px) 55%;
+  background-size:
+    auto,
+    auto,
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+}
+
+.search {
+  flex: 1;
+  min-width: 220px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(10, 14, 24, 0.5);
+  color: #fff;
+  outline: none;
+}
+
+.primary, .ghost {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.16);
+  cursor: pointer;
+  letter-spacing: .04em;
+}
+.primary {
+  background: linear-gradient(120deg, rgba(120, 210, 255, .25), rgba(160, 120, 255, .2));
+}
+.ghost { background: rgba(255,255,255,.04); padding: 10px 14px; width: auto; }
+
+.error { color: #ffb3b3; margin-top: 10px; }
+.table { margin-top: 16px; }
+.thead, .trow { display:grid; grid-template-columns: 120px 1.2fr 120px 170px; gap: 14px; padding: 14px 0; }
+.thead {
+  opacity:.7;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  letter-spacing: .18em;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.trow { border-bottom: 1px solid rgba(255,255,255,.06); align-items:center; }
+.badge {
+  display:inline-flex;
+  justify-content:center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  width: fit-content;
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.badge.entrada { border-color: rgba(120, 200, 255, 0.35); color: #bdeeff; }
+.badge.salida { border-color: rgba(255, 90, 90, 0.35); color: #ffd0d0; }
+.badge.ajuste { border-color: rgba(255, 210, 90, 0.30); color: #ffe9b5; }
+.prod { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: grid; gap: 4px; }
+.prod small { opacity: .65; font-size: 12px; }
+.empty { opacity:.7; margin: 12px 0 0; }
+
+@media (max-width: 980px) {
+  .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .form-shell { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 700px) {
+  .head { flex-direction: column; align-items: flex-start; }
+  .card-head { flex-direction: column; align-items: flex-start; }
+  .summary { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 1fr; }
+  .bar-values { justify-content: flex-start; }
+  .thead, .trow { grid-template-columns: 1fr; }
+  .details-grid { grid-template-columns: 1fr; }
+}
+.form-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ===== RFID Modal ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 10, 16, 0.75); /* Un poco más oscuro para enfoque */
+  backdrop-filter: blur(8px);
+  z-index: 40;
+}
+
+.rfid-modal {
+  position: fixed;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: min(92vw, 560px);
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(12, 14, 24, 0.95);
+  border: 1px solid rgba(120, 160, 255, 0.22);
+  box-shadow: 0 30px 80px rgba(0,0,0,.8);
+  z-index: 50;
+  text-align: center;
+}
+
+.rfid-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.rfid-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(12, 24, 32, 0.8), rgba(20, 40, 60, 0.8));
+  color: #7bd5ff;
+  box-shadow: 0 0 24px rgba(120, 210, 255, 0.15);
+  font-size: 22px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rfid-modal h3 {
+  margin: 16px 0 4px;
+  font-size: 22px;
+  letter-spacing: .12em;
+  color: #fff;
+}
+
+.rfid-sub {
+  color: rgba(180, 200, 255, 0.7);
+  letter-spacing: .28em;
+  font-size: 11px;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.rfid-section {
+  text-align: left;
+  margin: 0 auto 20px;
+}
+
+.rfid-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(200, 220, 255, 0.8);
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+/* --- ESTADO DEL ESCÁNER (NUEVO) --- */
+.rfid-scan {
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(16, 20, 34, 0.7);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(200, 215, 255, 0.6);
+  font-family: monospace; /* Fuente técnica */
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+}
+
+/* Estado: Escaneando (Borde punteado y parpadeo) */
+.rfid-scan.scanning {
+  border: 1px dashed rgba(120, 210, 255, 0.3);
+  background: rgba(120, 210, 255, 0.03);
+  color: rgba(120, 210, 255, 0.8);
+}
+
+/* Estado: Éxito (Verde tecnológico) */
+.rfid-scan.success {
+  background: rgba(5, 150, 105, 0.15); /* Verde oscuro transparente */
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #6ee7b7; /* Texto verde neón */
+  flex-direction: row;
+  gap: 12px;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);
+}
+
+.rfid-scan.success .icon {
+  font-size: 1.4rem;
+}
+
+.rfid-scan.success strong {
+  display: block;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  color: #fff;
+}
+
+.rfid-scan.success small {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+/* Animación de parpadeo para la antena */
+.blink {
+  animation: blinker 1.5s ease-in-out infinite;
+  display: block;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+@keyframes blinker { 
+  0% { opacity: 0.3; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.1); text-shadow: 0 0 10px rgba(120,210,255,0.8); }
+  100% { opacity: 0.3; transform: scale(0.95); }
+}
+
+/* -------------------------- */
+
+.rfid-grid {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.rfid-block { text-align: left; }
+
+.rfid-toggle {
+  display: flex;
+  gap: 6px;
+  background: rgba(10, 12, 20, 0.6);
+  border-radius: 14px;
+  padding: 4px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.rfid-chip {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(210, 225, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rfid-chip:hover { color: #fff; }
+
+.rfid-chip.active {
+  background: rgba(120, 210, 255, 0.15);
+  border-color: rgba(120, 210, 255, 0.3);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.rfid-qty {
+  height: 48px;
+  border-radius: 14px;
+  width: 100%;
+  background: rgba(16, 20, 34, 0.7);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 14px;
+}
+
+.rfid-input {
+  height: 48px;
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(16, 20, 34, 0.7);
+  color: #fff;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+/* --- BOTÓN CONFIRMAR (MEJORADO) --- */
+.rfid-confirm {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.3);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: not-allowed;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estado: Listo para confirmar (Activo) */
+.rfid-confirm.ready {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%); /* Gradiente Verde */
+  border-color: transparent;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(5, 150, 105, 0.35);
+  transform: translateY(0);
+}
+
+.rfid-confirm.ready:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(5, 150, 105, 0.45);
+}
+
+.rfid-confirm.ready:active {
+  transform: translateY(1px);
+}
+
+.rfid-confirm:disabled {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.3);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.rfid-status {
+  margin-top: 12px;
+  text-align: center;
+  color: #6adfb2;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.rfid-status.error {
+  color: #fca5a5;
+}
+
+.rfid-modal .x {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: none;
+  color: rgba(220, 235, 255, 0.6);
+  font-size: 14px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+}
+.rfid-modal .x:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+@media (max-width: 700px) {
+  .rfid-grid { grid-template-columns: 1fr; }
+}

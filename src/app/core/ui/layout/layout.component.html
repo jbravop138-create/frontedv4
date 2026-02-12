@@ -1,0 +1,20 @@
+<div class="app-shell">
+  <div class="bg-grid"></div>
+
+  <app-topbar
+    [mobileOpen]="mobileOpen()"
+    (toggleMobile)="toggleMobile()"
+    (closeMobile)="closeMobile()"
+  ></app-topbar>
+
+  <main class="content">
+    <div class="content-inner">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- overlay móvil -->
+  @if (mobileOpen()) {
+    <div class="overlay" (click)="closeMobile()"></div>
+  }
+</div>

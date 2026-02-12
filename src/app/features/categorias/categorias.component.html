@@ -1,0 +1,113 @@
+<section class="cats">
+  <!-- Header superior -->
+  <header class="cats-head">
+    <div class="kicker">
+      <span class="dot"></span>
+      <span class="txt">SISTEMA ACTIVO</span>
+    </div>
+
+    <div class="title-row">
+      <div class="title-block">
+        <h1>ESTRUCTURA DE DATOS</h1>
+        <h2>Nodos de Categoría</h2>
+        <p>Gestión estructural del inventario</p>
+      </div>
+
+      <button class="btn-outline" type="button" (click)="openCreate()" [disabled]="loading()">
+        <span class="plus">+</span>
+        CREAR NODO
+      </button>
+    </div>
+  </header>
+
+  <!-- Panel inline (tipo modal horizontal) -->
+  <section class="inline-panel" *ngIf="creating() || editingId()">
+    <div class="inline-top">
+      <div class="inline-title">
+        <span class="tag">
+          {{ editingId() ? 'EDITAR CATEGORÍA' : 'INICIALIZAR NUEVA CATEGORÍA' }}
+        </span>
+      </div>
+
+      <div class="actions">
+        <button
+          class="btn-ok"
+          type="button"
+          (click)="editingId() ? saveEdit() : create()"
+          [disabled]="loading()"
+          title="Guardar"
+        >
+          ✓
+        </button>
+
+        <button
+          class="btn-cancel"
+          type="button"
+          (click)="editingId() ? cancelEdit() : cancelCreate()"
+          [disabled]="loading()"
+          title="Cancelar"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <div class="inline-body">
+      <label>Nombre</label>
+      <input
+        type="text"
+        [ngModel]="nombreNuevo()"
+        (ngModelChange)="nombreNuevo.set($event)"
+        placeholder="Nombre de la categoría..."
+        autocomplete="off"
+      />
+
+      <label class="mt">Descripción (opcional)</label>
+      <input
+        type="text"
+        [ngModel]="descripcionNueva()"
+        (ngModelChange)="descripcionNueva.set($event)"
+        placeholder="Ej: Prendas superiores, etc."
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="inline-meta">
+      <span class="chip">Total: {{ categorias().length }}</span>
+      <span class="chip" *ngIf="loading()">Procesando...</span>
+      <span class="chip danger" *ngIf="error()">{{ error() }}</span>
+    </div>
+  </section>
+
+  <!-- Grilla de Cards -->
+  <section class="grid">
+    <article class="node" *ngFor="let c of categorias(); trackBy: trackById">
+      <div class="node-icon">
+        <!-- icono simple (no dependemos de librerías) -->
+        <span class="stack"></span>
+      </div>
+
+      <div class="node-content">
+        <div class="node-name">{{ c.nombre }}</div>
+        <div class="node-id">ID: {{ c.id }}</div>
+
+        <div class="node-desc" *ngIf="c.descripcion">{{ c.descripcion }}</div>
+      </div>
+
+      <!-- Acciones (opcionales, aparecen al hover) -->
+      <div class="node-actions">
+        <button class="icon-btn" type="button" (click)="startEdit(c)" title="Editar" [disabled]="loading()">
+          ✎
+        </button>
+        <button class="icon-btn danger" type="button" (click)="remove(c.id)" title="Eliminar" [disabled]="loading()">
+          🗑
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <!-- Error global si no está abierto el panel -->
+  <div class="global-error" *ngIf="error() && !(creating() || editingId())">
+    {{ error() }}
+  </div>
+</section>

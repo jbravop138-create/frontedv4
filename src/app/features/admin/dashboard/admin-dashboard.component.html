@@ -1,0 +1,129 @@
+<section class="dashboard" *ngIf="data() as d">
+  <header class="header">
+    <div class="title">
+      <span class="eyebrow">Núcleo Admin</span>
+      <h1>Panel de Control</h1>
+      <p>Lectura viva del inventario: claridad total con estética cósmica.</p>
+    </div>
+
+    <div class="header-actions">
+      <div class="status">
+        <span class="dot"></span>
+        <span>Administrador</span>
+      </div>
+      <button class="btn glow" (click)="load()">Actualizar</button>
+    </div>
+  </header>
+
+  <div class="alerts" *ngIf="error()">
+    <span class="chip danger">{{ error() }}</span>
+  </div>
+
+  <div class="stats">
+    <article class="card">
+      <div class="card-top">
+        <span class="icon">▦</span>
+        <span class="label">TOTAL CATEGORÍAS</span>
+      </div>
+      <div class="value">{{ d.total_categorias }}</div>
+      <div class="hint">Arquitectura del stock</div>
+    </article>
+
+    <article class="card glow">
+      <div class="card-top">
+        <span class="icon">◎</span>
+        <span class="label">MOVIMIENTOS</span>
+      </div>
+      <div class="value">{{ movimientosTotal() }}</div>
+      <div class="hint">Entradas, salidas y ajustes</div>
+    </article>
+  </div>
+
+  <section class="pulse">
+    <div class="pulse-item">
+      <span class="tag">Entradas</span>
+      <strong>{{ entradasTotal() }}</strong>
+    </div>
+    <div class="pulse-item">
+      <span class="tag">Salidas</span>
+      <strong>{{ salidasTotal() }}</strong>
+    </div>
+    <div class="pulse-item">
+      <span class="tag">Ajustes</span>
+      <strong>{{ ajustesTotal() }}</strong>
+    </div>
+    <div class="pulse-item accent">
+      <span class="tag">Balance</span>
+      <strong>{{ balance() }}</strong>
+    </div>
+    <div class="pulse-item rfid">
+      <span class="tag">RFID</span>
+      <strong>ESP32 Ready</strong>
+    </div>
+    <span class="chip" *ngIf="loading()">Cargando datos...</span>
+  </section>
+
+  <section class="panel wide">
+      <div class="panel-head">
+        <h2>Movimientos recientes</h2>
+        <span class="chip ghost">Últimos {{ recentMovimientos().length }}</span>
+      </div>
+
+      <div class="table">
+        <div class="row header">
+          <span>Tipo</span>
+          <span>Producto</span>
+          <span>Cantidad</span>
+          <span>Fecha</span>
+        </div>
+
+        <div class="row" *ngFor="let m of recentMovimientos(); trackBy: trackByMovimiento">
+          <span
+            class="badge"
+            [class.entrada]="m.tipo === 'ENTRADA'"
+            [class.salida]="m.tipo === 'SALIDA'"
+            [class.ajuste]="m.tipo === 'AJUSTE'"
+          >
+            {{ m.tipo }}
+            <small class="subtipo" *ngIf="m.ajuste_tipo">{{ m.ajuste_tipo.toLowerCase() }}</small>
+          </span>
+          <span class="truncate">{{ m.producto }}</span>
+          <span class="num">{{ m.cantidad }}</span>
+          <span class="muted">{{ m.fecha | date:'short' }}</span>
+        </div>
+      </div>
+  </section>
+
+  <section class="panel glow-panel wide">
+    <h2>Resumen de Movimientos</h2>
+
+    <div class="bars horizontal">
+      <div class="bars-grid horizontal">
+        <div class="bar-row" *ngFor="let b of barData()"
+             (mouseenter)="barHover.set(b)"
+             (mouseleave)="barHover.set(null)">
+          <div class="bar-day">{{ b.day }}</div>
+          <div class="bar-track">
+            <div class="bar entradas" [style.width.%]="h(b.entradas)"></div>
+            <div class="bar salidas" [style.width.%]="h(b.salidas)"></div>
+          </div>
+          <div class="bar-values">
+            <span class="val entradas">{{ b.entradas }}</span>
+            <span class="val salidas">{{ b.salidas }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bar-legend">
+        <span class="k entradas"></span> Entradas
+        <span class="k salidas"></span> Salidas
+      </div>
+
+      <div class="bar-tooltip" *ngIf="barHover() as x">
+        <div class="tt-day">{{ x.day }}</div>
+        <div class="tt-line"><b>Entradas:</b> {{ x.entradas }}</div>
+        <div class="tt-line"><b>Salidas:</b> {{ x.salidas }}</div>
+      </div>
+    </div>
+  </section>
+</section>

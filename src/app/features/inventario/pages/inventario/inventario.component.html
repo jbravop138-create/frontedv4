@@ -1,0 +1,137 @@
+<section class="inv">
+  <header class="inv-header">
+    <div class="title">
+      <h1>Consulta de Inventario</h1>
+      <p>Busca por código o nombre y filtra por categoría.</p>
+    </div>
+
+    <section class="summary">
+      <div class="summary-card">
+        <span class="label">Total</span>
+        <strong>{{ total() }}</strong>
+        <span class="hint">Ítems registrados</span>
+      </div>
+      <div class="summary-card ok">
+        <span class="label">OK</span>
+        <strong>{{ okCount() }}</strong>
+        <span class="hint">Stock estable</span>
+      </div>
+      <div class="summary-card danger">
+        <span class="label">Sin stock</span>
+        <strong>{{ zeroCount() }}</strong>
+        <span class="hint">Urgente</span>
+      </div>
+    </section>
+
+    <section class="health">
+      <div class="health-bar">
+        <span class="seg ok" [style.width.%]="okPercent()"></span>
+        <span class="seg danger" [style.width.%]="zeroPercent()"></span>
+      </div>
+      <div class="health-legend">
+        <span class="chip ok">OK {{ okPercent() }}%</span>
+        <span class="chip danger">Sin stock {{ zeroPercent() }}%</span>
+      </div>
+    </section>
+
+    <div class="filters">
+      <label class="search">
+        <span class="ico">🔎</span>
+        <input
+          type="text"
+          [value]="search()"
+          (input)="onSearch(($any($event.target)).value)"
+          placeholder="Buscar por código o nombre..."
+        />
+      </label>
+
+      <label class="select">
+        <span class="ico">⟂</span>
+        <select [value]="categoria()" (change)="onCategoria(($any($event.target)).value)">
+          <option value="all">Todas las Categorías</option>
+          <option *ngFor="let c of categorias()" [value]="c.id">{{ c.nombre }}</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="meta">
+      <span class="chip">Resultados: {{ visibleTotal() }}</span>
+      <span class="chip ghost">Total real: {{ total() }}</span>
+      <span class="chip danger" *ngIf="zeroCount() > 0">Sin stock: {{ zeroCount() }}</span>
+      <span class="chip" *ngIf="loading()">Cargando...</span>
+      <span class="chip danger" *ngIf="error()">{{ error() }}</span>
+
+      <div class="actions">
+        <button class="btn ghost" (click)="clearFilters()">Limpiar filtros</button>
+        <button class="btn" (click)="load()">Actualizar</button>
+      </div>
+    </div>
+
+    <div class="status-filters">
+      <button
+        class="pill"
+        [class.active]="stockFilter() === 'all'"
+        (click)="onStockFilter('all')"
+      >
+        Todo
+      </button>
+      <button
+        class="pill danger"
+        [class.active]="stockFilter() === 'zero'"
+        (click)="onStockFilter('zero')"
+      >
+        Sin stock
+      </button>
+    </div>
+  </header>
+
+  <section class="table-wrap" *ngIf="loading() && !error()">
+    <div class="table">
+      <div class="thead">
+        <div>PRODUCTO</div>
+        <div>CATEGORÍA</div>
+        <div>DETALLES</div>
+        <div class="center">STOCK</div>
+      </div>
+      <div class="tr skeleton" *ngFor="let _ of skeletonRows">
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line wide"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-pill"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="table-wrap" *ngIf="!loading() && !error()">
+    <div class="table">
+      <div class="thead">
+        <div>PRODUCTO</div>
+        <div>CATEGORÍA</div>
+        <div>DETALLES</div>
+        <div class="center">STOCK</div>
+      </div>
+
+      <div class="tr" *ngFor="let it of visibleItems(); trackBy: trackById">
+        <div class="strong">{{ it.nombre }}</div>
+        <div class="muted">{{ it.categoria_nombre }}</div>
+
+        <div class="tags">
+          <span class="tag" *ngIf="it.talla">{{ it.talla }}</span>
+          <span class="tag" *ngIf="it.color">{{ it.color }}</span>
+          <span class="tag muted" *ngIf="!it.talla && !it.color">—</span>
+        </div>
+
+        <div class="center">
+          <span class="stock">{{ it.stock_actual }}</span>
+        </div>
+      </div>
+
+      <div class="empty" *ngIf="visibleItems().length === 0">
+        <div class="empty-ico">📦</div>
+        <p>No hay resultados para los filtros seleccionados.</p>
+        <button class="btn ghost" (click)="clearFilters()">Ver todo</button>
+      </div>
+    </div>
+  </section>
+</section>

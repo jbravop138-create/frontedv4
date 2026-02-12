@@ -1,0 +1,61 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #0b0f1a;
+}
+
+/* ===== Shell ===== */
+.app-shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  transition: grid-template-rows .35s ease;
+}
+
+/* ===== Fondo ===== */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(1200px 600px at 70% 30%, rgba(120, 80, 255, 0.18), transparent 60%),
+    linear-gradient(180deg, #0b0f1a, #090d18);
+  pointer-events: none;
+}
+
+/* ===== Content (UNA SOLA VEZ) ===== */
+.content {
+  z-index: 1;
+  position: relative;
+  min-height: 100vh;
+  padding: 32px 48px 64px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center; /* centra el contenido */
+}
+
+/* ===== CENTRO REAL ===== */
+.content-inner {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px) {
+  .content {
+    padding: 48px 32px;
+  }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 900px) {
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(4px);
+    z-index: 40;
+  }
+}
