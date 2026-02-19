@@ -2,6 +2,12 @@
   "framework": "angular",
   "buildCommand": "npm run build",
   "outputDirectory": "dist/stock360-app/browser",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://stock360v4-production.up.railway.app/:path*"
+    }
+  ],
   "routes": [
     {
       "handle": "filesystem"
