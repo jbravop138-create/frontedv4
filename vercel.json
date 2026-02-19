@@ -6,15 +6,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://stock360v4-production.up.railway.app/:path*"
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
